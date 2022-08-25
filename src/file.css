@@ -73,7 +73,6 @@ body{
     grid-row:1/2;
     background-color: #1d3557;
     color:#f1faee;
-
 }
 
 .header  h1{
@@ -116,4 +115,87 @@ body{
 
 .creationEl > *{
     cursor: pointer;
+}
+
+.main{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:1em;
+    padding:2.2em;
+}
+
+.red{
+    background-color: #C60F0F;
+    color:white;
+}
+
+.green{
+    background-color: #63D471;
+}
+
+.yellow{
+    background-color: #eee708;
+}
+
+.todo{
+    border:4px solid black;
+    padding:1.1em;
+    border-radius: 1em;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: 1fr,3fr,1fr;
+    background-color: #ACC8E5;
+    color:#112A46;
+    position: relative;
+    min-height: 70%;
+    justify-items: end;
+}
+
+.todoTitle{
+    grid-column: 2/3;
+    grid-row: 1/2;
+    font-size:1.4em;
+    font-weight:bold;
+    justify-self: center;
+}
+
+.todoText{
+    grid-column: 1/4;
+    grid-row: 2/3;
+    margin-bottom: 1em;
+    justify-self: start;
+}
+
+.todoPriorty{
+    display: flex;
+    border:1px solid black;
+    grid-column:3/4;
+    grid-row:3/4;
+    flex-direction: row;
+}
+
+.closeBtn{
+    background-color:red;
+    padding:0.2em;
+    border:2px solid black;
+    color:white;
+    grid-column: 3/4;
+    grid-row: 1/2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    height: 1.5em;
+    width: 1.5em;
+    /* position: absolute; */
+    /* bottom:1em; */
+    /* left: 3em; */
+    margin-left:2em;
+    margin-bottom:1em;
+}
+
+.priortyEl{
+    padding:0.25em;
+    color:black;
 }
