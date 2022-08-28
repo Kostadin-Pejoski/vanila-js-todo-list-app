@@ -118,6 +118,16 @@ body{
     overflow-x: hidden;
 }
 
+.project{
+    display: flex;
+    gap:1em;
+    flex-direction: row;
+}
+
+.projects > *{
+    cursor: pointer;
+}
+
 .creationEl > *{
     cursor: pointer;
 }

@@ -3,10 +3,7 @@ export default function clearElement(element){
 }
 
 import { grid } from ".";
-
-let todoTitleInput=document.querySelector(`[name="todoTitle"]`) || null;
-let todoTextInput= document.querySelector(`[name="todoText"]`) || null;
-let todoPriortyInput=document.querySelector(`[name="todoPriorty"]`) || null;
+import { projects } from ".";
 
 export class toDo{
     constructor(title,dueDate,priorty,text){
@@ -15,8 +12,25 @@ export class toDo{
         this.priorty=priorty;
         this.actualElement="";
         this.text=text;
+        this.parentArr=[];
     }
+
+    deleteYourself(){
+        console.log(this.parentArr);
+        for(let i=0;i<this.parentArr.length;i++){
+
+            if(this.parentArr[i]==this){
+                this.parentArr.splice(i,1);
+            }
+        }
+    }
+
+    changePriorty(newPriorty){
+        this.priorty=newPriorty;
+    }
+
     load(){
+        console.log(this);
         let todo=document.createElement("div");
         todo.classList.add("todo");
         let placeholdeText=document.createElement("p");
@@ -76,15 +90,31 @@ export class toDo{
         closeBtn.textContent="X";
         closeBtn.classList.add("closeBtn");
         closeBtn.addEventListener("click",closeBtnFnc);
+        closeBtn.addEventListener("click",()=>{
+            this.deleteYourself();
+        });
 
         todo.append(placeholderTitle,closeBtn,placeholdeText,placeholderPriorty);
 
         grid.append(todo);
-        
+
         const priortyEls=document.querySelectorAll(".priortyEl");
-        priortyEls.forEach(El=>{
-            El.addEventListener("click",swtichClasses);
-        })
+        for(let i=0;i<priortyEls.length;i++){
+            priortyEls[i].addEventListener("click",swtichClasses);
+            priortyEls[i].addEventListener("click",()=>{
+                if(priortyEls[i].id=="0"){
+                    this.changePriorty("low");
+
+                }
+                else if(priortyEls[i].id=="1"){
+                    this.changePriorty("medium");
+
+                }
+                else if(priortyEls[i].id=="2"){
+                    this.changePriorty("high");
+                }
+            })
+        }
     }
 };
 
@@ -96,9 +126,15 @@ export class Project{
         this.isLoaded=false;
     }
     loadTodos(){
-        this.todos.forEach(todo=>{
-            todo.load();
-        })
+        clearElement(grid);
+        if(this.isLoaded){
+            this.todos.forEach(todo=>{
+                todo.load();
+            })
+        }
+        else{
+            return;
+        }
     }
 }
 
@@ -108,7 +144,6 @@ export  function closeBtnFnc(){
 
 function swtichClasses(){
     if(this.classList.contains("red") || this.classList.contains("yellow") || this.classList.contains("green")){
-        console.log("ok");
         return;
     }
     else if(this.id=="0"){
@@ -117,11 +152,11 @@ function swtichClasses(){
         second.classList.remove("yellow");
 
         let third=second.nextElementSibling;
-        console.log(third);
         third.classList.remove("red");
     }
 
-    else if(this.id=="1"){ 
+    else if(this.id=="1"){
+
         this.classList.add("yellow");
         let first=this.previousElementSibling;
         first.classList.remove("green");

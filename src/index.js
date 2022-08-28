@@ -9,7 +9,8 @@ import { closeBtnFnc } from "./Logic";
 // creating all the elements
 // creating the header
 
-let testProject= new Project("test");
+export let projects=[];
+
 const header=document.createElement("div");
 const sidebar=document.createElement("div");
 export const main=document.createElement("div");
@@ -32,12 +33,10 @@ grid.classList.add("grid");
 const projectsList=document.createElement("div");
 projectsList.classList.add("projects");
 const currentProjectTitle=document.createElement("h1");
-currentProjectTitle.textContent="Current Project";
-currentProjectTitle.classList.add("projectTitle");
 currentProjectTitle.classList.add("currentProjectTitle");
 main.append(currentProjectTitle,grid);
-sidebar.append(creationEl);
-sidebar.append(projectsList);
+sidebar.append(creationEl,projectsList);
+
 
 // placeholder Todos
 // for(let i=0;i<5;i++){
@@ -120,10 +119,19 @@ function generateTodoForm(){
     const createBtn=document.createElement("button");
     createBtn.textContent="create new Todo";
     createBtn.addEventListener("click",()=>{
+        if(todoTitleInput.value=="" || todoTextInput.value==""){
+            alert("make sure to fill all the fields");
+            generateOptions();
+            return;
+        }
         let todo = new toDo(todoTitleInput.value,"09/09/2003",select.value,todoTextInput.value);
-
-        testProject.todos.push(todo);
-        console.log(testProject);
+        for(let i=0;i<projects.length;i++){
+            if(projects[i].isLoaded){
+                todo.parentArr=projects[i].todos;
+                projects[i].todos.push(todo);
+            }
+        }
+        
         todo.load();
         generateOptions();
     });
@@ -137,6 +145,75 @@ function generateTodoForm(){
 
 }
 
+function loadProjectForm(){
+    clearElement(creationEl);
+    const form=document.createElement("div");
+    form.classList.add("form");
+    const projectTitleInput=document.createElement("input");
+    projectTitleInput.placeholder="Enter the project's name";
+    const projectBtn=document.createElement("button");
+    projectBtn.textContent="Create new Project";
+
+    form.append(projectTitleInput,projectBtn);
+    creationEl.append(form);
+    projectBtn.addEventListener("click",()=>{
+        if(projectTitleInput.value==""){
+            alert("you can't have empty title");
+            generateOptions();
+            return;
+        }
+        currentProjectTitle.textContent=projectTitleInput.value;
+        let newProject =new Project(projectTitleInput.value);
+        projects.forEach(project=>{
+            if(project.isLoaded){
+                project.isLoaded=false;
+            }
+        })
+        newProject.isLoaded=true;
+        let project=document.createElement("div");
+        let p=document.createElement("p");
+        let deleteProject=document.createElement("p");
+        deleteProject.textContent="X";
+        // deleting from Dom
+        deleteProject.addEventListener("click",deleteThisProject);
+        projects.push(newProject);
+        // deleting from array
+        deleteProject.addEventListener("click",()=>{
+            for(let i=0;i<projects.length;i++){
+                if(currentProjectTitle.textContent==newProject.title){
+                    currentProjectTitle.textContent="";
+                    clearElement(grid);
+                }
+                if(projects[i]==newProject){
+                    projects.splice(i,1);
+                }
+            }
+        });
+        project.classList.add("project");
+        project.append(p,deleteProject);
+        p.textContent=newProject.title;
+        p.addEventListener("click",()=>{
+            let currentTitle=p.textContent;
+            currentProjectTitle.textContent=currentTitle;
+            for(let i=0;i<projects.length;i++){
+                console.log(projects)
+                if(projects[i].title!=currentTitle && projects[i].isLoaded){
+                    projects[i].isLoaded=false;
+
+                }
+                else if(projects[i].title==currentTitle){
+                    projects[i].isLoaded=true;
+                    projects[i].loadTodos();
+
+                }
+            }
+        })
+        projectsList.append(project);
+        newProject.loadTodos();
+        generateOptions();
+    });
+}
+
 function generateOptions(){
     clearElement(creationEl);
     const makeTodo=document.createElement("p");
@@ -144,11 +221,15 @@ function generateOptions(){
     makeTodo.addEventListener("click",generateTodoForm);
     const makeProject=document.createElement("p");
     makeProject.textContent="Make New Project";
+    makeProject.addEventListener("click",loadProjectForm);
     creationEl.append(makeTodo,makeProject);
 }
 
 generateOptions();
 
+function deleteThisProject(){
+    this.parentElement.remove();
 
+}
 
 
