@@ -1,4 +1,4 @@
-import { grid, projects } from '.'
+import { grid, updateLocalStorage } from '.'
 
 export default function clearElement (element) {
   element.innerHTML = ''
@@ -17,7 +17,7 @@ export class toDo {
   deleteYourself () {
     console.log(this.parentArr)
     for (let i = 0; i < this.parentArr.length; i++) {
-      if (this.parentArr[i] == this) {
+      if (this.parentArr[i] === this) {
         this.parentArr.splice(i, 1)
       }
     }
@@ -44,21 +44,22 @@ export class toDo {
       let text = ''
       let className = ''
       const el = document.createElement('p')
-      if (i == 0) {
+      if (i === 0) {
         el.id = '0'
         text = 'low'
         className = 'green'
-      } else if (i == 1) {
+      } else if (i === 1) {
         el.id = '1'
         text = 'medium'
         className = 'yellow'
       } else {
         el.id = '2'
         text = 'high'
+        // eslint-disable-next-line no-unused-vars
         className = 'red'
       }
 
-      if (this.priorty == text) {
+      if (this.priorty === text) {
         switch (this.priorty) {
           case 'low':{
             el.classList.add('green')
@@ -83,10 +84,11 @@ export class toDo {
     const closeBtn = document.createElement('p')
     closeBtn.textContent = 'X'
     closeBtn.classList.add('closeBtn')
-    closeBtn.addEventListener('click', closeBtnFnc)
     closeBtn.addEventListener('click', () => {
       this.deleteYourself()
+      updateLocalStorage()
     })
+    closeBtn.addEventListener('click', closeBtnFnc)
 
     todo.append(placeholderTitle, closeBtn, placeholdeText, placeholderPriorty)
 
@@ -96,25 +98,23 @@ export class toDo {
     for (let i = 0; i < priortyEls.length; i++) {
       priortyEls[i].addEventListener('click', swtichClasses)
       priortyEls[i].addEventListener('click', () => {
-        if (priortyEls[i].id == '0') {
+        if (priortyEls[i].id === '0') {
           this.changePriorty('low')
-        } else if (priortyEls[i].id == '1') {
+        } else if (priortyEls[i].id === '1') {
           this.changePriorty('medium')
-        } else if (priortyEls[i].id == '2') {
+        } else if (priortyEls[i].id === '2') {
           this.changePriorty('high')
         }
       })
     }
   }
-};
+}
 
 export class Project {
   constructor (title) {
     this.title = title
     this.todos = []
     this.isLoaded = false
-    this.domParagraph = ''
-    this.deleteButton = ''
   }
 
   loadTodos () {
@@ -123,8 +123,6 @@ export class Project {
       this.todos.forEach(todo => {
         todo.load()
       })
-    } else {
-
     }
   }
 }
@@ -135,15 +133,16 @@ export function closeBtnFnc () {
 
 function swtichClasses () {
   if (this.classList.contains('red') || this.classList.contains('yellow') || this.classList.contains('green')) {
-
-  } else if (this.id == '0') {
+    // eslint-disable-next-line no-useless-return
+    return
+  } else if (this.id === '0') {
     this.classList.add('green')
     const second = this.nextElementSibling
     second.classList.remove('yellow')
 
     const third = second.nextElementSibling
     third.classList.remove('red')
-  } else if (this.id == '1') {
+  } else if (this.id === '1') {
     this.classList.add('yellow')
     const first = this.previousElementSibling
     first.classList.remove('green')

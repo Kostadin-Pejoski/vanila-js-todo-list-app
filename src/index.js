@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 // imports
 import './file.css'
 import clearElement, { Project, toDo, closeBtnFnc } from './Logic'
@@ -8,7 +9,19 @@ console.clear()
 // creating all the elements
 // creating the header
 
-export const projects = JSON.parse(localStorage.getItem('storageProjects'))
+export let projects = JSON.parse(localStorage.getItem('storageProjects')) || []
+
+projects = projects.map(project => {
+  const propperProject = new Project(project.title)
+  for (let i = 0; i < project.todos.length; i++) {
+    const propperToDo = new toDo(project.todos[i].title, '09/09/2003', project.todos[i].priorty, project.todos[i].text)
+    propperProject.todos.push(propperToDo)
+    propperToDo.parentArr = propperProject.todos
+  }
+  propperProject.isLoaded = project.isLoaded
+  console.log(propperProject.todos[0] instanceof toDo)
+  return propperProject
+})
 
 console.log(projects)
 
@@ -45,9 +58,10 @@ document.body.append(header, sidebar, main)
 
 const closeBtns = document.querySelectorAll('.closeBtn')
 closeBtns.forEach(closeBtn => closeBtn.addEventListener('click', closeBtnFnc))
+closeBtns.forEach(closeBtn => closeBtn.addEventListener('click', updateLocalStorage))
 
 function generateTodoForm () {
-  if (projects.length == 0) {
+  if (projects.length === 0) {
     alert("you can't make todos without parent projects")
     generateOptions()
     return
@@ -80,7 +94,7 @@ function generateTodoForm () {
   const createBtn = document.createElement('button')
   createBtn.textContent = 'create new Todo'
   createBtn.addEventListener('click', () => {
-    if (todoTitleInput.value == '' || todoTextInput.value == '') {
+    if (todoTitleInput.value === '' || todoTextInput.value === '') {
       alert('make sure to fill all the fields')
       generateOptions()
       return
@@ -95,6 +109,7 @@ function generateTodoForm () {
 
     todo.load()
     generateOptions()
+    updateLocalStorage()
   })
 
   select.append(low, medium, high)
@@ -116,7 +131,7 @@ function loadProjectForm () {
   form.append(projectTitleInput, projectBtn)
   creationEl.append(form)
   projectBtn.addEventListener('click', () => {
-    if (projectTitleInput.value == '') {
+    if (projectTitleInput.value === '') {
       alert("you can't have empty title")
       generateOptions()
       return
@@ -135,15 +150,16 @@ function loadProjectForm () {
     deleteProject.textContent = 'X'
     // deleting from Dom
     deleteProject.addEventListener('click', deleteThisProject)
+    console.log(newProject instanceof Project)
     projects.push(newProject)
     // deleting from array
     deleteProject.addEventListener('click', () => {
       for (let i = 0; i < projects.length; i++) {
-        if (currentProjectTitle.textContent == newProject.title) {
+        if (currentProjectTitle.textContent === newProject.title) {
           currentProjectTitle.textContent = ''
           clearElement(grid)
         }
-        if (projects[i] == newProject) {
+        if (projects[i] === newProject) {
           projects.splice(i, 1)
         }
       }
@@ -156,9 +172,9 @@ function loadProjectForm () {
       currentProjectTitle.textContent = currentTitle
       for (let i = 0; i < projects.length; i++) {
         console.log(projects)
-        if (projects[i].title != currentTitle && projects[i].isLoaded) {
+        if (projects[i].title !== currentTitle && projects[i].isLoaded) {
           projects[i].isLoaded = false
-        } else if (projects[i].title == currentTitle) {
+        } else if (projects[i].title === currentTitle) {
           projects[i].isLoaded = true
           projects[i].loadTodos()
         }
@@ -172,7 +188,7 @@ function loadProjectForm () {
     console.log(newProject.domParagraph)
     newProject.loadTodos()
     generateOptions()
-    localStorage.setItem('storageProjects', JSON.stringify(projects))
+    updateLocalStorage()
   })
 }
 
@@ -193,6 +209,7 @@ function deleteThisProject () {
   this.parentElement.remove()
 }
 
+// eslint-disable-next-line no-unused-vars
 const getCircularReplacer = () => {
   const seen = new WeakSet()
   return (key, value) => {
@@ -207,12 +224,49 @@ const getCircularReplacer = () => {
 }
 
 function loadSideBar () {
+  if (projects.length === 0) {
+    return
+  }
   for (let i = 0; i < projects.length; i++) {
+    console.log(projects[0] instanceof Project)
     const projectDiv = document.createElement('div')
     projectDiv.classList.add('project')
-    projectDiv.append(projects[i].domParagraph, projects[i].deleteButton)
+    const projectTitle = document.createElement('p')
+    projectTitle.textContent = projects[i].title
+    const closeBtn = document.createElement('p')
+    closeBtn.textContent = 'X'
+    projectTitle.addEventListener('click', () => {
+      for (let j = 0; j < projects.length; j++) {
+        if (projects[j].title !== projectTitle.textContent && projects[i].isLoaded) {
+          projects[j].isLoaded = false
+          continue
+        } else if (projects[i].title === projectTitle.textContent) {
+          projects[j].isLoaded = true
+          currentProjectTitle.textContent = projectTitle.textContent
+          clearElement(grid)
+          projects[j].loadTodos()
+        }
+      }
+    })
+    closeBtn.addEventListener('click', deleteThisProject)
+    closeBtn.addEventListener('click', () => {
+      currentProjectTitle.textContent = ''
+      clearElement(grid)
+      for (let j = 0; j < projects.length; j++) {
+        if (projects[j].title === projectTitle.textContent) {
+          projects.splice(j, 1)
+          updateLocalStorage()
+        }
+      }
+    })
+
+    projectDiv.append(projectTitle, closeBtn)
     projectsList.append(projectDiv)
   }
 }
 
 loadSideBar()
+
+export function updateLocalStorage () {
+  localStorage.setItem('storageProjects', JSON.stringify(projects, getCircularReplacer()))
+}
