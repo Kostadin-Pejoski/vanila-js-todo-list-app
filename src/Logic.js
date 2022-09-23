@@ -100,10 +100,13 @@ export class toDo {
       priortyEls[i].addEventListener('click', () => {
         if (priortyEls[i].id === '0') {
           this.changePriorty('low')
+          updateLocalStorage()
         } else if (priortyEls[i].id === '1') {
           this.changePriorty('medium')
+          updateLocalStorage()
         } else if (priortyEls[i].id === '2') {
           this.changePriorty('high')
+          updateLocalStorage()
         }
       })
     }
