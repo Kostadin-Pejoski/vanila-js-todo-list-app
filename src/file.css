@@ -270,6 +270,8 @@ body{
     background-color: #C60F0F;
 }
 
-/* .dateCreated{
+.dateCreated{
     grid-column: 1/2;
-} */
+    grid-row: 3/4;
+    align-self: center;
+}
