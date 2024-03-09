@@ -10,13 +10,16 @@ console.clear()
 // creating the header
 
 export let projects = JSON.parse(localStorage.getItem('storageProjects')) || []
-
+console.log(projects)
 projects = projects.map(project => {
+  project.isLoaded = false
   const propperProject = new Project(project.title)
-  for (let i = 0; i < project.todos.length; i++) {
-    const propperToDo = new toDo(project.todos[i].title, '09/09/2003', project.todos[i].priorty, project.todos[i].text)
-    propperProject.todos.push(propperToDo)
-    propperToDo.parentArr = propperProject.todos
+  if (project.todos !== undefined) {
+    for (let i = 0; i < project.todos.length; i++) {
+      const propperToDo = new toDo(project.todos[i].title, '09/09/2003', project.todos[i].priorty, project.todos[i].text)
+      propperProject.todos.push(propperToDo)
+      propperToDo.parentArr = propperProject.todos
+    }
   }
   propperProject.isLoaded = project.isLoaded
   return propperProject
