@@ -28,15 +28,14 @@ export class toDo {
   }
 
   load () {
-    console.log(this)
     const todo = document.createElement('div')
     todo.classList.add('todo')
     const placeholdeText = document.createElement('p')
     placeholdeText.classList.add('todoText')
-    placeholdeText.textContent = this.text
+    placeholdeText.textContent = 'Task: ' + this.text
     const placeholderTitle = document.createElement('p')
     placeholderTitle.classList.add('todoTitle')
-    placeholderTitle.textContent = this.title
+    placeholderTitle.textContent = 'Title: ' + this.title
     const placeholderPriorty = document.createElement('div')
     placeholderPriorty.classList.add('todoPriorty')
 
@@ -81,6 +80,9 @@ export class toDo {
       placeholderPriorty.append(el)
     }
 
+    const editBtn = document.createElement('button')
+    editBtn.classList.add('editBtn')
+    editBtn.textContent = 'Edit'
     const closeBtn = document.createElement('p')
     closeBtn.textContent = 'X'
     closeBtn.classList.add('closeBtn')
@@ -88,9 +90,44 @@ export class toDo {
       this.deleteYourself()
       updateLocalStorage()
     })
+
+    editBtn.addEventListener('click', () => {
+      let newTitleInput = document.createElement('input')
+      let newTextInput = document.createElement('input')
+      if (editBtn.textContent === 'Edit') {
+        editBtn.textContent = 'Save'
+        newTitleInput.classList.add('titlePos')
+        newTitleInput.placeholder = 'New title'
+        newTextInput.classList.add('textPos')
+        newTextInput.placeholder = 'New text'
+        todo.removeChild(placeholderTitle)
+        todo.removeChild(placeholdeText)
+        todo.appendChild(newTitleInput)
+        todo.appendChild(newTextInput)
+      } else {
+        const inputs = todo.querySelectorAll('input')
+        if (inputs[0].value === '' || inputs[1].value === '') {
+          alert('please insert new title or new text for this todo')
+          return
+        }
+        newTitleInput = inputs[0]
+        newTextInput = inputs[1]
+        editBtn.textContent = 'Edit'
+        this.text = newTextInput.value
+        this.title = newTitleInput.value
+        placeholdeText.textContent = 'Task: ' + this.text
+        placeholderTitle.textContent = 'Ttile: ' + this.title
+        newTextInput.remove()
+        newTitleInput.remove()
+        todo.appendChild(placeholdeText)
+        todo.appendChild(placeholderTitle)
+        updateLocalStorage()
+      }
+    })
+
     closeBtn.addEventListener('click', closeBtnFnc)
 
-    todo.append(placeholderTitle, closeBtn, placeholdeText, placeholderPriorty)
+    todo.append(placeholderTitle, closeBtn, placeholdeText, placeholderPriorty, editBtn)
 
     grid.append(todo)
 

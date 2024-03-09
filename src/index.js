@@ -19,11 +19,8 @@ projects = projects.map(project => {
     propperToDo.parentArr = propperProject.todos
   }
   propperProject.isLoaded = project.isLoaded
-  console.log(propperProject.todos[0] instanceof toDo)
   return propperProject
 })
-
-console.log(projects)
 
 const header = document.createElement('div')
 const sidebar = document.createElement('div')
@@ -150,7 +147,6 @@ function loadProjectForm () {
     deleteProject.textContent = 'X'
     // deleting from Dom
     deleteProject.addEventListener('click', deleteThisProject)
-    console.log(newProject instanceof Project)
     projects.push(newProject)
     // deleting from array
     deleteProject.addEventListener('click', () => {
@@ -171,7 +167,6 @@ function loadProjectForm () {
       const currentTitle = p.textContent
       currentProjectTitle.textContent = currentTitle
       for (let i = 0; i < projects.length; i++) {
-        console.log(projects)
         if (projects[i].title !== currentTitle && projects[i].isLoaded) {
           projects[i].isLoaded = false
         } else if (projects[i].title === currentTitle) {
@@ -181,11 +176,8 @@ function loadProjectForm () {
       }
     })
     projectsList.append(project)
-    console.log(deleteProject, p)
     newProject.deleteButton = deleteProject.innerHTML
     newProject.domParagraph = p.innerHTML
-    console.log(newProject.deleteButton)
-    console.log(newProject.domParagraph)
     newProject.loadTodos()
     generateOptions()
     updateLocalStorage()
@@ -228,7 +220,6 @@ function loadSideBar () {
     return
   }
   for (let i = 0; i < projects.length; i++) {
-    console.log(projects[0] instanceof Project)
     const projectDiv = document.createElement('div')
     projectDiv.classList.add('project')
     const projectTitle = document.createElement('p')
