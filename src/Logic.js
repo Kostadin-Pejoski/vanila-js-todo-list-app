@@ -12,6 +12,7 @@ export class toDo {
     this.actualElement = ''
     this.text = text
     this.parentArr = []
+    this.dateCreated = new Date().toLocaleDateString()
   }
 
   deleteYourself () {
@@ -38,7 +39,9 @@ export class toDo {
     placeholderTitle.textContent = 'Title: ' + this.title
     const placeholderPriorty = document.createElement('div')
     placeholderPriorty.classList.add('todoPriorty')
-
+    const dateEl = document.createElement('p')
+    dateEl.classList.add('dateCreated')
+    dateEl.textContent = this.dateCreated
     for (let i = 0; i < 3; i++) {
       let text = ''
       let className = ''
@@ -127,7 +130,7 @@ export class toDo {
 
     closeBtn.addEventListener('click', closeBtnFnc)
 
-    todo.append(placeholderTitle, closeBtn, placeholdeText, placeholderPriorty, editBtn)
+    todo.append(placeholderTitle, closeBtn, placeholdeText, placeholderPriorty, editBtn, dateEl)
 
     grid.append(todo)
 
