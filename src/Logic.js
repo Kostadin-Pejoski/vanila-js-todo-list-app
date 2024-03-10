@@ -42,6 +42,12 @@ export class toDo {
     const dateEl = document.createElement('p')
     dateEl.classList.add('dateCreated')
     dateEl.textContent = 'Date created:' + this.dateCreated
+    const priortyText = document.createElement('p')
+    priortyText.textContent = 'Priority'
+    const priorityWrapper = document.createElement('div')
+    priorityWrapper.appendChild(priortyText)
+    priorityWrapper.appendChild(placeholderPriorty)
+    priorityWrapper.classList.add('priorirtyWrapper')
     for (let i = 0; i < 3; i++) {
       let text = ''
       let className = ''
@@ -130,7 +136,7 @@ export class toDo {
 
     closeBtn.addEventListener('click', closeBtnFnc)
 
-    todo.append(placeholderTitle, closeBtn, placeholdeText, placeholderPriorty, editBtn, dateEl)
+    todo.append(placeholderTitle, closeBtn, placeholdeText, priorityWrapper, editBtn, dateEl)
 
     grid.append(todo)
 

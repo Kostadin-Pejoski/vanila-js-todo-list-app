@@ -10,7 +10,6 @@ console.clear()
 // creating the header
 
 export let projects = JSON.parse(localStorage.getItem('storageProjects')) || []
-console.log(projects)
 projects = projects.map(project => {
   project.isLoaded = false
   const propperProject = new Project(project.title)
@@ -54,7 +53,7 @@ sidebar.append(creationEl, projectsList)
 sidebar.classList.add('sidebar')
 main.classList.add('main')
 
-document.body.append(header, sidebar, main)
+document.body.append(header, main, sidebar)
 
 const closeBtns = document.querySelectorAll('.closeBtn')
 closeBtns.forEach(closeBtn => closeBtn.addEventListener('click', closeBtnFnc))
@@ -127,7 +126,6 @@ function loadProjectForm () {
   projectTitleInput.placeholder = "Enter the project's name"
   const projectBtn = document.createElement('button')
   projectBtn.textContent = 'Create new Project'
-
   form.append(projectTitleInput, projectBtn)
   creationEl.append(form)
   projectBtn.addEventListener('click', () => {
@@ -219,6 +217,9 @@ const getCircularReplacer = () => {
 }
 
 function loadSideBar () {
+  const projectsListTitle = document.createElement('p')
+  projectsListTitle.textContent = 'Projects:'
+  projectsList.append(projectsListTitle)
   if (projects.length === 0) {
     return
   }

@@ -78,6 +78,7 @@ body{
     grid-row:1/2;
     background-color: #1d3557;
     color:#f1faee;
+    width: 100vw;
 }
 
 .header  h1{
@@ -95,7 +96,8 @@ body{
 .sidebar{
     background-color:#e63946;
     color:#f1faee;
-
+    grid-column: 1/2;
+    grid-row: 2;
 }
 
 .creationEl, .projects{
@@ -111,6 +113,7 @@ body{
 
 .projects{
     border: none;
+    justify-content: flex-start;
     gap:1.25em;
     font-size:1.4em;
     font-weight: 700;
@@ -204,11 +207,18 @@ body{
 .todoPriorty{
     display: flex;
     border:1px solid black;
-    grid-column:3/4;
-    grid-row:3/4;
+    
     flex-direction: row;
 }
 
+.priorirtyWrapper{
+    grid-column:3/4;
+    grid-row:3/4;
+}
+.priorirtyWrapper > p{
+    text-align: center;
+    margin-bottom: 0.25em;
+}
 .closeBtn{
     background-color:red;
     padding:0.2em;
@@ -223,9 +233,6 @@ body{
     border-radius: 50%;
     height: 1.5em;
     width: 1.5em;
-    /* position: absolute; */
-    /* bottom:1em; */
-    /* left: 3em; */
     margin-left:2em;
     margin-bottom:1em;
 }
@@ -274,4 +281,28 @@ body{
     grid-column: 1/2;
     grid-row: 3/4;
     align-self: center;
+}
+
+@media screen and (max-width:480px) {
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    body > div {
+        min-width: 100vw;
+    }
+
+    .grid{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .header{
+        padding: 2em 0;
+    }
 }
